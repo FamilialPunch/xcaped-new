@@ -1,0 +1,1509 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Xcaped | Immersive Escape Rooms</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Inline overrides / refinements -->
+    <style>
+      :root {
+        --red: #ff1e1e;
+        --dark-red: #8b0000;
+        --black: #000;
+        --white: #fff;
+        --grey: #1a1a1a;
+        --light-grey: #333;
+        --grey-dark: #1d1d1d;
+        --grey-light: #262626;
+        --bg-dark:    #0f0f0f;
+        --card-bg:    linear-gradient(145deg, #1e1e1e, #141414);
+        --shadow:     rgba(0,0,0,0.6);
+        --text-light: #e0e0e0;
+      }
+
+      /* Reset & base */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Montserrat", sans-serif;
+        background: radial-gradient(circle at center, #000 0%, #111 100%);
+        color: var(--white);
+        line-height: 1.5;
+      }
+
+      /* Keyframes */
+      /* A gentler flicker for text */
+      @keyframes flickerSmooth {
+        0%, 100% { opacity: 1; text-shadow: 0 0 8px var(--red), 0 0 12px var(--red); }
+        50%      { opacity: 0.85; text-shadow: 0 0 4px var(--red), 0 0 6px var(--red); }
+      }
+      /* Pulsing glow for the CTA button */
+      @keyframes pulseGlow {
+        0%, 100% { box-shadow: 0 0 10px var(--red), 0 0 20px var(--red); }
+        50%      { box-shadow: 0 0 2px var(--red), 0 0 6px var(--red); }
+      }
+
+      /* Hero */
+      .hero {
+        position: relative;
+        height: 100vh;
+        background: url("https://github.com/FamilialPunch/images/blob/main/Xcaped%20BG%20Images%202.png?raw=true") center/cover no-repeat fixed;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+      }
+
+      /* Navigation */
+      .nav{
+        position: sticky;          /* make it cling to the top again */
+        top: 0;
+        z-index: 200;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:1.5rem 3rem;
+        background:var(--black);
+      }
+      .logo {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2rem;
+        color: var(--red);
+        letter-spacing: 2px;
+        text-decoration: none;
+        text-shadow: 0 0 6px var(--dark-red);
+      }
+      .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 2rem;
+      }
+      .nav-links a {
+        color: var(--white);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.35s ease-in-out;
+      }
+      .nav-links a:hover { color: var(--red); }
+
+      /* Hero content */
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        margin: auto;
+        max-width: 1200px;
+        padding: 0 1rem;
+      }
+      .headline {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: clamp(2.5rem, 6vw, 5rem);
+        letter-spacing: 3px;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        transition: color 0.40s ease-in-out, text-shadow 0.40s ease-in-out;
+      }
+      .subhead {
+        font-size: clamp(1rem, 2.5vw, 1.5rem);
+        margin-bottom: 0.5rem;
+        transition: color 0.35s ease-in-out;
+      }
+      .challenge {
+        /* Restrict hover area to text only */
+        display: inline-block;
+        font-size: clamp(1rem, 2.3vw, 1.4rem);
+        margin-bottom: 1rem;
+        color: var(--red);
+        font-weight: 700;
+        transition: color 0.35s ease-in-out, text-shadow 0.35s ease-in-out;
+      }
+
+      /* Hover interactions */
+      .headline:hover {
+        color: var(--white);
+        text-shadow: 0 0 12px var(--red), 0 0 24px var(--red);
+      }
+      .challenge:hover {
+        color: var(--white);
+        text-shadow: 0 0 10px var(--red), 0 0 18px var(--red);
+      }
+
+      /* CTA Button */
+      .cta-primary {
+        position: relative;
+        /* Change to block-level so it sits beneath the challenge text */
+        display: block;
+        padding: 0.9rem 2.5rem;
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        text-decoration: none;
+        color: var(--white);
+        background: var(--dark-red);
+        border: 2px solid transparent;
+        border-radius: 4px;
+        transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+                    color 0.5s ease-in-out,
+                    border 0.5s ease-in-out,
+                    background-color 0.6s ease-in-out;
+        margin: 1rem auto 0; /* Centers the button and creates some spacing on top */
+        width: max-content;
+      }
+      .cta-primary:hover {
+        transform: scale(1.05);
+        background-color: transparent;
+        color: var(--red);
+        border-color: var(--red);
+        animation: pulseGlow 1.6s ease-in-out infinite;
+      }
+
+      /* Countdown */
+      .countdown-timer {
+        position: relative;
+        z-index: 2;
+        margin-top: 1rem;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: var(--red);
+        text-shadow: 0 0 5px var(--red);
+      }
+
+      /* Sticky countdown bar */
+      .sticky-timer {
+        position: fixed;                /* Stick to viewport, not container */
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: radial-gradient(circle, rgb(255, 30, 30) 0%, transparent 70%);
+        text-shadow: 0 0 2px var(--red), 0 0 12px var(--dark-red);
+        color: var(--white);
+        font-weight: bold;
+        text-align: center;
+        box-shadow: 0 -2px 6px rgba(0,0,0,0.3);
+        display: none;                  /* Toggled by JS */
+        pointer-events: none;
+        z-index: 1000;                  /* Make sure it's above all other elements */
+      }
+
+      /* (Optional) add a little drop‑shadow so it stands out */
+      .sticky-timer {
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      }
+
+      @keyframes smokeOut {
+        0% { opacity: 1; filter: blur(0); transform: translateY(0); }
+        60% { opacity: 0.6; filter: blur(4px); transform: translateY(-12px); }
+        100% { opacity: 0; filter: blur(8px); transform: translateY(-24px); }
+      }
+      @keyframes smokeIn {
+        0% { opacity: 0; filter: blur(8px); transform: translateY(-24px); }
+        60% { opacity: 0.6; filter: blur(4px); transform: translateY(-12px); }
+        100% { opacity: 1; filter: blur(0); transform: translateY(0); }
+      }
+
+      /* Escape Rooms Section*/
+
+      .rooms {
+        padding: 4rem 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .rooms-heading {
+        position: relative;
+        display: inline-block;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        letter-spacing: 2px;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        color: var(--white); /* Default text color */
+      }
+      .rooms-heading::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, var(--dark-red), var(--red));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        opacity: 0;
+        transition: opacity 0.7s ease-in-out;
+      }
+      .rooms-heading:hover::after {
+        opacity: 1;
+      }
+      
+      .rooms-lead {
+        font-size: clamp(1rem, 2.4vw, 1.35rem);
+        max-width: 700px;
+        margin: 0 auto 3rem;
+        color: #ccc;
+      }
+      .rooms-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+      }
+      .room-card {
+        position: relative;
+        display: flex;
+        height: 360px;
+        border-radius: 6px;
+        overflow: hidden;
+        transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s ease-in-out;
+      }
+      .room-card:nth-child(even) {
+        flex-direction: row-reverse;
+      }
+      .room-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 18px rgba(255, 30, 30, 0.35);
+      }
+      .room-img {
+        flex: 1 1 50%;
+        background-size: cover;
+        background-position: center;
+        filter: brightness(0.55);
+        transition: transform 0.6s ease-out;
+      }
+      .room-card:hover .room-img {
+        transform: scale(1.08);
+      }
+      .room-overlay {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, transparent 55%, rgba(255,30,30,0.35) 100%, rgba(139,0,0,0.7) 100%);
+        opacity: 0;
+        transition: opacity 0.45s ease;
+        pointer-events: none;
+        mix-blend-mode: screen;
+      }
+      .room-card:hover .room-overlay {
+        opacity: 1;
+      }
+      .room-info {
+        flex: 1 1 50%;
+        background: var(--grey);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+        padding: 2rem;
+        text-shadow: 0 0 6px rgba(0,0,0,0.8);
+        position: relative;
+        z-index: 2;
+      }
+      .room-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+      }
+      .room-meta {
+        font-size: 1rem;
+        color: #ddd;
+      }
+      .room-cta {
+        display: inline-block;
+        margin-top: 0.6rem;
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--white);
+        background: var(--dark-red);
+        border: 2px solid transparent;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.5s ease-in-out, border 0.5s ease-in-out;
+      }
+      .room-cta:hover {
+        transform: scale(1.05);
+        background: transparent;
+        border-color: var(--red);
+        color: var(--red);
+      }
+      .value-prop {
+        padding: 4rem 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .vp-heading {
+        position: relative;
+        display: inline-block; /* restricts hover area to text only */
+        font-family: "Bebas Neue", sans-serif;
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        letter-spacing: 2px;
+        margin-bottom: 0.5rem;
+        color: var(--white);
+        cursor: pointer;
+      }
+      .vp-heading::before {
+        content: attr(data-text);
+        position: absolute;
+        inset: 0;
+        color: var(--red);
+        pointer-events: none;
+      }
+      /* Smoke-out animation: makes the red text vanish */
+      .smoke-out::before {
+        animation: smokeOut 0.9s ease-in forwards;
+      }
+      /* Smoke-in animation: brings back the red text */
+      .smoke-in::before {
+        animation: smokeIn 0.9s ease-out forwards;
+      }
+      .value-prop p.lead {
+        font-size: clamp(1rem, 2.4vw, 1.35rem);
+        max-width: 700px;
+        margin: 0 auto 3rem auto;
+        color: #ccc;
+        transition: color 0.4s ease-out;
+      }
+      /* When hovering over the lead paragraph, change its color */
+      .value-prop p.lead:hover {
+        color: var(--dark-red);
+      }
+      .vp-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+      }
+      .vp-item {
+        background: var(--grey);
+        padding: 2.5rem 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 6px;
+        transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+          box-shadow 0.35s ease-in-out;
+        position: relative;
+        overflow: hidden;
+      }
+      /* Link wrapper for full box */
+      .vp-link {
+        display: block;
+        text-align:center;
+        color: inherit;
+        text-decoration: none;
+      }
+      .vp-item::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, transparent 40%, var(--red) 100%);
+        opacity: 0;
+        transition: opacity 0.4s ease-in-out;
+        box-shadow: 0 10px 18px rgba(255, 30, 30, 0.35);
+      }
+      .vp-item:hover::before { opacity: 0.12; }
+      .vp-item:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 18px rgba(255, 30, 30, 0.35);
+      }
+      .vp-icon {
+        margin-bottom: 1rem;
+      }
+      /* Specific styling for Font Awesome icons */
+      .vp-icon.fa-solid {
+        font-size: 2.8rem;
+        color: var(--red);
+      }
+      /* Styling for image icons */
+      .vp-icon img {
+        max-width: 4.8rem;
+        height: auto;
+        display: block;
+        margin:0 auto; 
+      }
+      .vp-title {
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-bottom: 0.6rem;
+      }
+      .vp-desc {
+        font-size: 0.95rem;
+        line-height: 1.55;
+        color: #ccc;
+      }
+      
+      /* Fade-in animation for the section */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .mission {
+        padding: 4rem 1.5rem;
+        max-width: 100%;
+        margin: 0 auto;
+        text-align: center;
+        background: var(--black);
+        border-top: 2px solid var(--dark-red);
+        border-bottom: 2px solid var(--dark-red);
+        animation: fadeIn 1s ease forwards;
+      }
+      .mission-heading {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        letter-spacing: 2px;
+        margin-bottom: 0.5rem;
+        position: relative;
+        display: inline-block;
+        color: var(--white);
+        cursor: pointer;
+      }
+      .mission-heading::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, white, var(--dark-red), var(--red));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+      }
+      .mission-heading:hover::after {
+        opacity: 1;
+      }
+      .mission-subtitle {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        color: var(--white);
+        opacity: 0.85;
+      }
+      .red-time {
+        color: var(--red);
+        font-weight: bold;
+      }
+      .mission-details {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2rem;
+      }
+      .mission-item {
+        background: var(--light-grey);
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 2px solid transparent; /* Reserve space for the border */
+        width: 280px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      }
+      .mission-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        background: transparent;
+        border-color: var(--dark-red);
+      }
+      .mission-item i {
+        font-size: 2rem;
+        color: var(--red);
+        margin-bottom: 0.5rem;
+      }
+      .mission-detail {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.1rem;
+        color: var(--white);
+        margin: 0.3rem 0;
+      }
+
+    /* Lore Section CSS*/
+
+    .lore-section {
+      padding: 4rem 1.5rem;
+      text-align: center;
+    }
+    .lore-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 5vw, 4rem);
+      margin-bottom: 3rem;
+      letter-spacing: 2px;
+      background: linear-gradient(45deg, var(--red), var(--dark-red));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 2px var(--red), 0 0 12px var(--dark-red);
+      transition: background 0.4s ease-in-out, text-shadow 0.4s ease-in-out;
+    }
+    .lore-heading:hover {
+      background: linear-gradient(45deg, #ff1e1e, #8b0000, #ff1e1e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: none;
+    }
+    .lore-container {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .lore-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: linear-gradient var(--grey-light);
+      border: 1px solid rgba(255, 30, 30, 0.15);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(255, 30, 30, 0.2);
+      transform: translateY(20px);
+      opacity: 0;
+      animation: fadeInUp 0.8s forwards;
+    }
+    /* Decorative glow overlay on each lore card */
+    .lore-card::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,30,30,0.25) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+    }
+    .lore-card:hover::before {
+      opacity: 1;
+    }
+    .lore-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(255, 30, 30, 0.4);
+    }
+    .lore-card .lore-text,
+    .lore-card .lore-image {
+      flex: 1;
+      padding: 2rem;
+      z-index: 2;
+    }
+    .lore-card .lore-text {
+      text-align: left;
+    }
+    .lore-card .lore-text h3 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+    }
+    .lore-card .lore-text p {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .lore-card .lore-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+      transition: transform 0.4s ease, filter 0.4s ease;
+    }
+    .lore-card .lore-image img:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
+    /* Bomb Room uses reverse order: text on left, image on right */
+    .lore-card.bomb-room {
+      flex-direction: row-reverse;
+    }
+
+    .lore-cta {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--white);
+    background: var(--dark-red);
+    border: 2px solid transparent;
+    border-radius: 4px;
+    text-decoration: none;
+    transition:
+      transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+      background-color 0.5s ease-in-out,
+      border 0.5s ease-in-out;
+    }
+    .lore-cta:hover {
+      transform: scale(1.05);
+      background: transparent;
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    /* Review Section CSS*/
+
+    .reviews {
+    max-width: 1200px;    /* ↑ wider */
+    width: 90%;           /* so it scales on smaller screens */
+    margin: 0 auto;
+    padding: 3rem 2rem;   /* ↑ a little extra breathing room */
+    text-align: center;
+    }
+
+    .review-heading {
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--red);
+    }
+    .review-icon {
+      font-size: 1.5em;
+    }
+
+    .carousel-wrapper {
+      position: relative;
+      overflow: visible;
+      padding: 2rem 0;
+    }
+
+    /* Edge‑fade overlays */
+    .carousel-wrapper::before,
+    .carousel-wrapper::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 3rem;              /* how wide the fade is—tweak to your taste */
+      pointer-events: none;     /* let clicks pass through */
+      z-index: 2;               /* sit above the scrolling cards */
+    }
+
+    .carousel-wrapper::before {
+      left: 0;
+      background: linear-gradient(
+        to right,
+        var(--bg-dark) 0%,
+        rgba(15,15,15,0) 100%
+      );
+    }
+
+    .carousel-wrapper::after {
+      right: 0;
+      background: linear-gradient(
+        to left,
+        var(--bg-dark) 0%,
+        rgba(15,15,15,0) 100%
+      );
+    }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 2.5rem;
+      height: 2.5rem;
+      border: none;
+      border-radius: 50%;
+      background: rgba(20, 20, 20, 0.7);
+      color: var(--red);
+      font-size: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.3s, background 0.3s;
+      cursor: pointer;
+      z-index: 4;
+    }
+    .carousel-wrapper:hover .carousel-btn {
+      opacity: 1;
+    }
+    .carousel-btn:hover {
+      background: rgba(255, 255, 255, 0.9);
+    }
+    .prev { left: -1rem; }
+    .next { right: -1rem; }
+
+    .review-container {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: visible;          /* ensure vertical overflow is visible */
+    scroll-snap-type: x mandatory;
+    gap: 1.5rem;
+    padding: 1.5rem 2rem;         /* top & bottom padding for the glow */
+    scroll-behavior: smooth;
+    }
+    .review-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .review-card {
+      flex: 0 0 calc(100% - 3rem);
+      max-width: calc(100% - 3rem);
+      background: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: 0 8px 16px var(--shadow);
+      padding: 2rem;
+      scroll-snap-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 220px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+    .review-card:hover {
+      transform: translateY(-6px);
+      box-shadow:
+        0 12px 24px var(--shadow),
+        0 0 15px var(--red);
+    }
+
+    .review-text {
+      font-style: italic;
+      color: #ccc;
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+      flex-grow: 1;
+    }
+
+    .review-stars {
+      font-size: 1.2rem;
+      color: var(--red);
+      margin-bottom: 1rem;
+    }
+
+    .review-author a {
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .review-author a:hover {
+      color: var(--red);
+    }
+
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+    }
+
+    .carousel-dot {
+      width: 12px;
+      height: 4px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 2px;
+      transition: width 0.3s ease, background 0.3s ease;
+      cursor: pointer;
+      border: none;
+      padding: 0;
+    }
+    
+    .carousel-dot.active {
+      width: 24px;
+      background: var(--red);
+    }
+
+    .carousel-dot:hover {
+      background: var(--red);
+    }
+
+    /* ───── Footer Styles ───── */
+
+    .site-footer{
+      position:relative;
+      background:var(--black);
+      color:var(--text-light);
+      padding:4rem 1.5rem 2rem;
+      border-top:2px solid var(--dark-red);
+      overflow:hidden;
+      font-size:.95rem;
+    }
+    .footer-overlay{
+      position:absolute;inset:0;
+      background:radial-gradient(circle at center,
+                 rgba(255,30,30,.15) 0%,
+                 rgba(0,0,0,.9) 60%);
+      mix-blend-mode:screen;pointer-events:none;
+    }
+    .footer-inner{
+      position:relative;z-index:1;
+      max-width:1200px;margin:0 auto;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:2.5rem;
+    }
+    .footer-logo{
+      font-family:"Bebas Neue",sans-serif;
+      font-size:2.2rem;letter-spacing:2px;
+      color:var(--red);
+      text-shadow:0 0 6px var(--dark-red);
+      text-decoration:none;
+    }
+
+    .contact-list{
+      list-style:none;
+      margin:0;
+      padding:0;
+    }
+    .contact-list li{
+      margin-bottom:.6rem;              /* ⬅ spacing between lines */
+      display:flex;
+      align-items:center;
+    }
+    .contact-list li:last-child{margin-bottom:0}
+    .contact-list i{margin-right:.5rem;color:var(--red)}
+    .contact-list a{
+      color:var(--text-light);
+      text-decoration:none;
+      transition:color .3s;
+    }
+    .contact-list a:hover{color:var(--red)}
+
+    .footer-tagline{margin-top:.5rem;color:#bbb;line-height:1.4;max-width:280px}
+    .footer-links h4,
+    .footer-contact h4,
+    .footer-social h4{
+      font-family:"Bebas Neue",sans-serif;
+      font-size:1.3rem;letter-spacing:1px;
+      margin-bottom:.75rem;color:var(--white);
+    }
+    .footer-links ul{list-style:none;line-height:1.9}
+    .footer-links a{
+      color:var(--text-light);text-decoration:none;transition:color .3s;
+    }
+    .footer-links a:hover{color:var(--red)}
+    .footer-contact i{margin-right:.4rem;color:var(--text-light)}
+    .social-icons{display:flex;gap:.6rem}
+
+    .social-icons a{
+      width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;
+      border:1px solid var(--red);border-radius:50%;
+      color:var(--red);font-size:1rem;
+      text-decoration:none;              /* ← remove underline */
+      transition:background .35s,transform .35s,box-shadow .35s;
+    }
+    .social-icons a:hover{
+      text-decoration:none;              /* ← keep underline off on hover */
+      background:var(--red);color:var(--white);
+      transform:translateY(-4px);
+      box-shadow:0 0 10px var(--red),0 0 18px var(--dark-red);
+    }
+
+    .footer-bottom{text-align:center;margin-top:3rem;opacity:.8;font-size:.85rem}
+    @media(max-width:480px){
+      .footer-inner{gap:1.8rem}.footer-logo{font-size:1.8rem}
+    }
+
+    @media (min-width: 640px) {
+      .review-card {
+        flex: 0 0 calc(50% - 2rem);
+        max-width: calc(50% - 2rem);
+      }
+    }
+    @media (min-width: 1024px) {
+      .review-card {
+        flex: 0 0 calc(33.333% - 2rem);
+        max-width: calc(33.333% - 2rem);
+      }
+    }
+
+    /* Fade in and slide-up animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @media (max-width: 768px) {
+      .lore-card {
+        flex-direction: column;
+        transform: translateY(0); /* Avoid initial offset on mobile */
+      }
+      .lore-card.bomb-room {
+        flex-direction: column;
+      }
+      .lore-card .lore-text {
+        text-align: center;
+      }
+    }
+    @media (max-width: 768px) {
+      .room-card {
+        flex-direction: column;
+        height: auto;
+      }
+      .room-img {
+        display: none;
+      }
+      .room-info {
+        flex: 1 1 100%;
+      }
+    }
+
+      @media (max-width: 768px) {
+        .nav-links { gap: 1rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <div class="overlay"></div>
+      <nav class="nav">
+        <a href="#" class="logo">Xcaped</a>
+      
+        <ul class="nav-links">
+          <li><a href="#rooms">Rooms</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      
+        <!-- ⏱ sticky timer bar -->
+        <div class="sticky-timer">
+          <span id="sticky-time">Time Left: 00:03:00</span>
+        </div>
+      </nav>      
+
+      <div class="hero-content">
+        <h1 class="headline">Immersive Escape Rooms</h1>
+        <p class="subhead">You have 60 minutes to crack the clues, solve the puzzles and escape.</p>
+        <p class="challenge">Are you ready for the ultimate thrill?</p>
+        <a href="#booking" class="cta-primary">Book Your Escape</a>
+        <div class="countdown-timer" id="countdown"><span id="time">Time Left: 00:03:00</span></div>
+      </div>
+    </header>
+
+    
+    
+    <!-- Rooms Showcase Section | Xcaped -->
+    <section class="rooms" id="rooms">
+      <h2 class="rooms-heading" data-text="🗝 Escape Rooms">🗝 Escape Rooms</h2>
+      <p class="rooms-lead">Choose your adventure. Each room is a 60‑minute race against the clock.</p>
+    
+      <div class="rooms-grid">
+        <!-- Room 1 -->
+        <article class="room-card">
+          <div class="room-img" style="background-image:url('https://github.com/FamilialPunch/images/blob/main/Xcaped%20BG%20Images.png?raw=true');"></div>
+          <div class="room-info">
+            <h3 class="room-title">The Basement</h3>
+            <p class="room-meta">Difficulty: ★★★★☆ · 2–8 Players</p>
+            <a href="#booking" class="room-cta">Book Now</a>
+          </div>
+          <div class="room-overlay"></div>
+        </article>
+      
+        <!-- Room 2 -->
+        <article class="room-card">
+          <div class="room-img" style="background-image:url('https://github.com/FamilialPunch/images/blob/main/Xcaped%20BG%20Images.png?raw=true');"></div>
+          <div class="room-info">
+            <h3 class="room-title">The Bomb Room</h3>
+            <p class="room-meta">Difficulty: ★★★☆☆ · 2–8 Players</p>
+            <a href="#booking" class="room-cta">Book Now</a>
+          </div>
+          <div class="room-overlay"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="value-prop" id="why-us">
+      <h2 class="vp-heading" id="vp-heading" data-text="🎯 The Experience">🎯 The Experience</h2>
+      <p class="lead">
+        Get ready for an adventure that’s fun, clever, and full of surprises. At Xcaped, you're not just walking into a room, you’re stepping into a story. Here’s what makes the experience unforgettable:
+      </p>
+      <div class="vp-grid">
+        <!-- Box 1 with a link and an image as icon -->
+        <div class="vp-item">
+          <a href="#" class="vp-link">
+            <span class="vp-icon">
+              <img src="" alt="" />
+            </span>
+            <h3 class="vp-title">🔒 Locked In</h3>
+            <p class="vp-desc">
+              Once the door closes, the countdown begins. It’s just you, your team, and the challenge ahead.
+            </p>
+          </a>
+        </div>
+        <!-- Box 2 with a link -->
+        <div class="vp-item">
+          <a href="#" class="vp-link">
+            <span class="vp-icon">
+              <img src="Card 2 Icon" alt="" />
+            </span>
+            <h3 class="vp-title">🧠 Mind-Bending Puzzles</h3>
+            <p class="vp-desc">
+              Work together to solve creative clues, crack codes, and uncover hidden secrets.
+            </p>
+          </a>
+        </div>
+        <!-- Box 3 with a link -->
+        <div class="vp-item">
+          <a href="#" class="vp-link">
+            <span class="vp-icon">
+              <img src="Card 3 Icon" alt="" />
+            </span>
+            <h3 class="vp-title">🎭 Immersive Storylines</h3>
+            <p class="vp-desc">
+              Each room pulls you into a unique setting, built to keep you on your toes from start to finish.
+            </p>
+          </a>
+        </div>
+        <!-- Box 4 with a link -->
+        <div class="vp-item">
+          <a href="#" class="vp-link">
+            <span class="vp-icon">
+              <img src="" alt="" />
+            </span>
+            <h3 class="vp-title">⏱ The Countdown is Real</h3>
+            <p class="vp-desc">
+              60 minutes. One mission. Perfect for friends, families, and team-building fun.
+            </p>
+          </a>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Mission Section | Xcaped -->
+    <section class="mission" id="mission">
+      <h2 class="mission-heading" data-text="🔐 Your Time Is Running Out">🔐 Your Time Is Running Out</h2>
+      <p class="mission-subtitle">Will you make it before the clocks reaches <span class="red-time">0:00</span>?</p>
+      <div class="mission-details">
+        <div class="mission-item">
+          <i class="fas fa-clock"></i>
+          <p class="mission-detail"><strong class="red-time">Time Limit:</strong></p>
+          <p class="mission-detail">60 minutes</p>
+        </div>
+        <div class="mission-item">
+          <i class="fas fa-users"></i>
+          <p class="mission-detail"><strong class="red-time">Bring Your Squad:</strong></p>
+          <p class="mission-detail">2–8 players</p>
+        </div>
+        <div class="mission-item">
+          <i class="fas fa-fire"></i>
+          <p class="mission-detail"><strong class="red-time">Challenge Level:</strong></p>
+          <p class="mission-detail">High intensity</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Enhanced Lore Section -->
+    <section class="lore-section" id="lore">
+      <h2 class="lore-heading">Unveil the Untold Lore</h2>
+      <div class="lore-container">
+        <!-- The Basement Lore Card (Text Left, Image Right) -->
+        <div class="lore-card basement">
+          <div class="lore-text">
+            <h3>The Basement</h3>
+            <p>
+              You’ve been plunged into a chilling basement—cold, confined, and full of secrets. Kidnapped into this shadowy underworld, every echo and flickering light hints at hidden clues. The walls themselves seem to whisper mysteries of your captor’s plans. Your escape lies in unraveling these cryptic puzzles before darkness swallows you whole.
+            </p>
+            <a href="https://www.xcaped.co.za/quest/the-basement/" class="lore-cta">Book Now</a>
+          </div>
+          <div class="lore-image">
+            <!-- Replace with your actual image URL -->
+            <img src="https://github.com/FamilialPunch/images/blob/main/Xcaped%20BG%20Images.png?raw=true" alt="The Basement">
+          </div>
+        </div>
+
+        <!-- The Bomb Room Lore Card (Text Left, Image Right via CSS reverse) -->
+        <div class="lore-card bomb-room">
+          <div class="lore-text">
+            <h3>The Bomb Room</h3>
+            <p>
+              The tension escalates in the Bomb Room, where every second edges you closer to catastrophe. Here, amid the cold precision of ticking time, you must scramble to uncover the bomb schematics. With danger lurking in every shadow and the threat of detonation looming overhead, your every move counts in the race to save yourself—and perhaps many others.
+            </p>
+            <a href="https://www.xcaped.co.za/quest/stop-the-bombs/" class="lore-cta">Book Now</a>
+          </div>
+          <div class="lore-image">
+            <!-- Replace with your actual image URL -->
+            <img src="https://github.com/FamilialPunch/images/blob/main/Xcaped%20BG%20Images.png?raw=true" alt="The Bomb Room">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REVIEW SECTION HTML -->
+    <section class="reviews" id="reviews">
+      <h2 class="review-heading">
+        <span class="review-icon">💬</span>
+        What Our Players Say
+      </h2>
+    
+      <div class="carousel-wrapper">
+        <button class="carousel-btn prev" aria-label="Previous reviews">‹</button>
+        <div class="review-container">
+          <!-- Card 1 -->
+          <div class="review-card">
+            <p class="review-text">
+              “Had an awesome time at Xcaped Escape Room! Jacey, our games master, was super friendly and made the experience even better. The room was challenging but really fun – a great activity for anyone looking for a bit of excitement and teamwork. We absolutely loved it and can’t wait to try another room!”
+            </p>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-author">
+              <a
+                href="https://www.google.com/maps/contrib/100329595644131949158/reviews?hl=en-GB"
+                target="_blank" rel="noopener"
+              >
+                — Thirin.
+              </a>
+            </p>
+          </div>
+        
+          <!-- Card 2 -->
+          <div class="review-card">
+            <p class="review-text">
+              “This was an amazing experience! They were extremely friendly and funny, making it a very comfortable, fun and all together wonderful trip. Would definitely recommend it for family and friends hoping to have a good time.”
+            </p>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-author">
+              <a
+                href="https://www.google.com/maps/contrib/107597295567437377229/reviews?hl=en-GB"
+                target="_blank" rel="noopener"
+              >
+                — Hilleke Genis.
+              </a>
+            </p>
+          </div>
+        
+          <!-- Card 3 -->
+          <div class="review-card">
+            <p class="review-text">
+              “My boys had an awesome experience. The lady was absolutely friendly and sweet. She made my son feel so special on his birthday. She even gave him a small party. Thank you for the great service. Will definitely do it again”
+            </p>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-author">
+              <a
+                href="https://www.google.com/maps/contrib/114449004879834690899/reviews?hl=en-GB"
+                target="_blank" rel="noopener"
+              >
+                — TATUM ANNIE KHAN.
+              </a>
+            </p>
+          </div>
+        
+          <!-- Card 4 -->
+          <div class="review-card">
+            <p class="review-text">
+              “A great experience. My girlfriend and I did one of the escape rooms on our holiday.”
+            </p>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-author">
+              <a
+                href="https://www.google.com/maps/contrib/101356813511485780256/reviews?hl=en-GB"
+                target="_blank" rel="noopener"
+              >
+                — 
+                Isaque De Vasconcelos.
+              </a>
+            </p>
+          </div>
+        
+          <!-- Card 5 -->
+          <div class="review-card">
+            <p class="review-text">
+              “Loved the two rooms . I would recommend this to anyone.”
+            </p>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-author">
+              <a
+                href="https://www.google.com/maps/contrib/102752664733816193975/reviews?hl=en-GB"
+                target="_blank" rel="noopener"
+              >
+                — Marthinus Van Zyl.
+              </a>
+            </p>
+          </div>
+        
+          <!-- Card 6 -->
+          <div class="review-card">
+            <p class="review-text">
+              “Me and my fiancé were there yesterday and didn't know what to expect. But we really enjoyed it and also learned that we can work as a team . After doing the basement we just had to do the other room aswell . I would definitely return there!”
+            </p>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-author">
+              <a
+                href="https://www.google.com/maps/contrib/105471625759869004349/reviews?hl=en-GB"
+                target="_blank" rel="noopener"
+              >
+                — Jaco Lombard.
+              </a>
+            </p>
+          </div>
+        
+          <!-- Card 7 -->
+          <div class="review-card">
+            <p class="review-text">
+              “What fun me and my fiancé had!! Two very well thought out rooms. Would definitely recommend!! Very friendly staff.”
+            </p>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-author">
+              <a
+                href="https://www.google.com/maps/contrib/109651611131007203923/reviews?hl=en-GB"
+                target="_blank" rel="noopener"
+              >
+                — Kayla Janse van Vuuren.
+              </a>
+            </p>
+          </div>
+        
+          <!-- Card 8 -->
+          <div class="review-card">
+            <p class="review-text">
+              “Thoroughly enjoyed this with the family, we didn't finish and escape but we enjoyed every minute of it.”
+            </p>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-author">
+              <a
+                href="https://www.google.com/maps/contrib/103015829130286974052/reviews?hl=en-GB"
+                target="_blank" rel="noopener"
+              >
+                — Msizi Nkosi.
+              </a>
+            </p>
+          </div>
+        
+          <!-- Card 9 -->
+          <div class="review-card">
+            <p class="review-text">
+              “Great experience! The Basement challenge was very well thought out. Owner is a friendly & helpful lady! We'll be back!”
+            </p>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-author">
+              <a
+                href="https://www.google.com/maps/contrib/109604912035128341643/reviews?hl=en-GB"
+                target="_blank" rel="noopener"
+              >
+                — René Pienaar.
+              </a>
+            </p>
+          </div>
+        
+          <!-- Card 10 -->
+          <div class="review-card">
+            <p class="review-text">
+              “What a awesome experience. It was my 1st time doing something like this. Its a must do 👌🏻
+            
+              Just want to also say thank you to Andrew. Your hosting was alot of fun and amazing.”
+            </p>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-author">
+              <a
+                href="https://www.google.com/maps/contrib/117858865807100657815/reviews?hl=en-GB"
+                target="_blank" rel="noopener"
+              >
+                — Ivan Brownlees.
+              </a>
+            </p>
+          </div>
+        
+          <!-- Add more .review-card blocks as needed -->
+        </div>
+      
+        <button class="carousel-btn next" aria-label="Next reviews">›</button>
+      </div>
+    
+      <div class="carousel-dots" role="tablist" aria-label="Review pages"></div>
+    </section>
+
+    <footer class="site-footer" id="footer">
+      <div class="footer-overlay"></div>
+    
+      <div class="footer-inner">
+        <!-- Brand & tagline -->
+        <div class="footer-brand">
+          <a href="#" class="footer-logo">Xcaped</a>
+          <p class="footer-tagline">Escape the ordinary, enter the unknown.</p>
+        </div>
+    
+        <!-- Quick links -->
+        <nav class="footer-links" aria-label="Footer navigation">
+          <h4>Quick&nbsp;Links</h4>
+          <ul>
+            <li><a href="#rooms">Rooms</a></li>
+            <li><a href="#why-us">Experience</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="#mission">Mission</a></li>
+            <li><a href="#booking">Book&nbsp;Now</a></li>
+          </ul>
+        </nav>
+    
+        <!-- Contact info -->
+        <div class="footer-contact">
+          <h4>Contact&nbsp;Us</h4>
+        
+          <ul class="contact-list">
+            <li>
+              <a href="https://g.co/kgs/eT9Lh2U" target="_blank" rel="noopener">
+                <i class="fas fa-map-marker-alt"></i>
+                6 homestead Road, Margate, South Africa
+              </a>
+            </li>
+        
+            <li>
+              <a href="tel:+27821234567">
+                <i class="fas fa-phone-alt"></i>
+                +27 82 123 4567
+              </a>
+            </li>
+        
+            <li>
+              <a href="mailto:escape@xcaped.co.za">
+                <i class="fas fa-envelope"></i>
+                escape@xcaped.co.za
+              </a>
+            </li>
+          </ul>
+        </div>
+    
+        <!-- Social media -->
+        <div class="footer-social">
+          <h4>Follow&nbsp;Us</h4>
+          <div class="social-icons">
+            <a href="https://www.facebook.com/Xcaped" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/xcapedmargatekzn/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/@xcapedmargate" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+            <a href="https://wa.me/27822906906" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+      </div>
+    
+      <div class="footer-bottom">
+        <p>© <span id="year"></span> Xcaped · All Rights Reserved</p>
+      </div>
+    </footer>
+
+    <script>
+      // Hero Section JavaScript
+      document.addEventListener('DOMContentLoaded', () => {
+
+      /* ========= 1. shared countdown ========= */
+      const heroTime   = document.getElementById('time');       // timer in hero
+      const stickyTime = document.getElementById('sticky-time');// timer in nav
+      let   remaining  = 180;                                   // seconds (3 min)
+
+      const tick = () => {
+        const mm  = String(Math.floor(remaining / 60)).padStart(2,'0');
+        const ss  = String(remaining % 60).padStart(2,'0');
+        const txt = `Time Left: 00:${mm}:${ss}`;
+        heroTime.textContent   = txt;
+        stickyTime.textContent = txt;
+        if (remaining > 0) remaining--;
+      };
+      tick();                       // initialise immediately
+      setInterval(tick, 1000);      // then update every second
+
+
+      /* ========= 2. show / hide sticky bar ========= */
+      const hero      = document.querySelector('.hero');
+      const nav       = document.querySelector('.nav');
+      const stickyBar = document.querySelector('.sticky-timer');
+
+      const toggleBar = () => {
+        const trigger = hero.offsetHeight - nav.offsetHeight;
+        stickyBar.style.display = window.scrollY > trigger ? 'block' : 'none';
+      };
+
+      window.addEventListener('scroll', toggleBar);
+      window.addEventListener('resize', toggleBar); // keeps it correct on resize
+      toggleBar(); // run once in case page loads mid‑scroll
+      });
+
+      // Hero Section JavaScript End
+
+      const heading = document.getElementById("vp-heading");
+      // State: false => red text is visible, true => red text is smoked out (vanished)
+      let isSmoked = false;
+      // To prevent interrupting an ongoing animation
+      let animationRunning = false;
+      
+      heading.addEventListener("mouseenter", () => {
+        if (animationRunning) return;
+        animationRunning = true;
+        if (!isSmoked) {
+          // Apply smoke-out animation to make red vanish
+          heading.classList.remove("smoke-in");
+          heading.classList.remove("smoke-out"); // Reset the current state
+          void heading.offsetWidth; // Force reflow to restart animation
+          heading.classList.add("smoke-out");
+          setTimeout(() => {
+            isSmoked = true;
+            animationRunning = false;
+          }, 900);
+        } else {
+          // Apply smoke-in animation to bring back the red text
+          heading.classList.remove("smoke-out");
+          void heading.offsetWidth; // Force reflow to restart animation
+          heading.classList.add("smoke-in");
+          setTimeout(() => {
+            isSmoked = false;
+            animationRunning = false;
+          }, 900);
+        }
+      });
+
+      // JavaScript for Review Carousel
+
+        const container = document.querySelector('.review-container');
+      const cards     = [...container.children];
+      const prevBtn   = document.querySelector('.carousel-btn.prev');
+      const nextBtn   = document.querySelector('.carousel-btn.next');
+      const dotsWrap  = document.querySelector('.carousel-dots');
+      
+      // 1) start at the 2nd review (index 1)
+      let current = 1;
+      
+      // Build the dots
+      cards.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'carousel-dot';
+        dot.setAttribute('aria-label', `Page ${i+1}`);
+        dot.addEventListener('click', () => goTo(i));
+        dotsWrap.append(dot);
+      });
+      const dots = [...dotsWrap.children];
+      
+      // 2) highlight the 2nd dot right away (no scrolling)
+      dots[current].classList.add('active');
+      
+      // update() scrolls into view and updates dots
+      function update() {
+        cards[current].scrollIntoView({
+          behavior: 'smooth',
+          block:    'nearest',  // <-- prevents vertical scrolling
+          inline:   'center'
+        });
+        dots.forEach((d,i) => d.classList.toggle('active', i === current));
+      }
+      
+      function goTo(i) {
+        current = (i + cards.length) % cards.length;
+        update();
+      }
+      
+      prevBtn.addEventListener('click', () => goTo(current - 1));
+      nextBtn.addEventListener('click', () => goTo(current + 1));
+      document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft')  goTo(current - 1);
+        if (e.key === 'ArrowRight') goTo(current + 1);
+      });
+    
+      // END of JavaScript for Review Carousel
+
+        /* Footer Section */
+      /* auto‑update year */
+      document.getElementById("year").textContent =
+        new Date().getFullYear();
+    </script>
+  </body>
+</html>
