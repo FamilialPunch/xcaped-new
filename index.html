@@ -900,6 +900,34 @@
       box-shadow:0 0 10px var(--red),0 0 18px var(--dark-red);
     }
 
+    @media (max-width:480px){
+      /* slightly smaller wrapper padding */
+      .carousel-wrapper{padding:1rem 0;}    
+
+      /* tighter gaps + momentum swipe */
+      .review-container{
+        gap:1rem;
+        padding:1rem 1rem;
+        -webkit-overflow-scrolling:touch;   /* iOS inertial scroll */
+      }   
+
+      /* each card ≈85 % so the next card peeks in */
+      .review-card{
+        flex:0 0 85%;
+        max-width:85%;
+        padding:1.25rem;                    /* lighter inner spacing */
+      }   
+
+      /* narrower fade edges */
+      .carousel-wrapper::before,
+      .carousel-wrapper::after{width:2rem;}   
+
+      /* arrows a little smaller & inset */
+      .carousel-btn{width:2.25rem;height:2.25rem;}
+      .prev{left:.25rem;}
+      .next{right:.25rem;}
+    }
+
     .footer-bottom{text-align:center;margin-top:3rem;opacity:.8;font-size:.85rem}
     @media(max-width:480px){
       .footer-inner{gap:1.8rem}.footer-logo{font-size:1.8rem}
